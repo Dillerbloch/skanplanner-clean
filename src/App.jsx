@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Search, Filter, ShieldAlert, FileText, Stethoscope, CalendarClock } from "lucide-react";
+import { Search, Filter, ShieldAlert, FileText, Stethoscope, CalendarClock, ArrowRight, HeartPulse } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -45,6 +45,21 @@ function sourceLabel(confidence) {
   if (confidence === "high") return "Direct from guidelines";
   return "Check guideline recommendation";
 }
+
+const SOURCE_URLS = {
+  "Update on Surveillance in Von Hippel–Lindau Disease": "https://aacrjournals.org/clincancerres/article/31/12/2271/762770/Update-on-Surveillance-in-Von-Hippel-Lindau",
+  "Update on Pediatric Surveillance Recommendations for PTEN Hamartoma Tumor Syndrome, DICER1-Related Tumor Predisposition, and Tuberous Sclerosis Complex": "https://aacrjournals.org/clincancerres/article/31/2/234/751094/Update-on-Pediatric-Surveillance-Recommendations",
+  "Update on Retinoblastoma Predisposition and Surveillance Recommendations for Children": "https://aacrjournals.org/clincancerres/article/31/9/1573/761249/Update-on-Retinoblastoma-Predisposition-and",
+  "Update on Cancer Screening Recommendations for Individuals with Li–Fraumeni Syndrome": "https://aacrjournals.org/clincancerres/article/31/10/1831/762214/Update-on-Cancer-Screening-Recommendations-for",
+  "Update on Surveillance for Wilms Tumor and Hepatoblastoma in Beckwith–Wiedemann Syndrome and Other Predisposition Syndromes": "https://aacrjournals.org/clincancerres/article/30/23/5260/750189/Update-on-Surveillance-for-Wilms-Tumor-and",
+  "Update on Surveillance Guidelines in Emerging Wilms Tumor Predisposition Syndromes": "https://aacrjournals.org/clincancerres/article/31/1/18/750711/Update-on-Surveillance-Guidelines-in-Emerging",
+  "Update on Cancer Screening in Children with Syndromes of Bone Lesions, Hereditary Leiomyomatosis and Renal Cell Carcinoma Syndrome, and Other Rare Syndromes": "https://aacrjournals.org/clincancerres/article/31/3/457/751206/Update-on-Cancer-Screening-in-Children-with",
+  "Update on Pediatric Cancer Surveillance Recommendations for Patients with Neurofibromatosis Type 1, Noonan Syndrome, CBL Syndrome, Costello Syndrome, and Related RASopathies": "https://aacrjournals.org/clincancerres/article/30/21/4834/749143/Update-on-Pediatric-Cancer-Surveillance",
+  "Update on Tumor Surveillance for Children with Hereditary Pheochromocytoma/Paraganglioma Syndromes": "https://aacrjournals.org/clincancerres/article/31/16/3368/763978/Update-on-Tumor-Surveillance-for-Children-with",
+  "Pediatric Cancer Screening in Hereditary Gastrointestinal Cancer Risk Syndromes: An Update from the AACR Childhood Cancer Predisposition Working Group": "https://aacrjournals.org/clincancerres/article/30/20/4566/748802/Pediatric-Cancer-Screening-in-Hereditary",
+  "Update on Recommendations for Cancer Screening and Surveillance in Children with Genomic Instability Disorders": "https://aacrjournals.org/clincancerres/article/30/22/5009/749560/Update-on-Recommendations-for-Cancer-Screening-and",
+  "Neuroblastoma Predisposition and Surveillance—An Update from the 2023 AACR Childhood Cancer Predisposition Workshop": "https://aacrjournals.org/clincancerres/article/30/15/3137/746580/Neuroblastoma-Predisposition-and-Surveillance-An"
+};
 
 function uniqueSyndromes(rules) {
   return Array.from(new Set(rules.map((r) => r.syndrome))).sort((a, b) => a.localeCompare(b));
@@ -188,33 +203,33 @@ export default function PediatricSurveillanceLookupApp() {
   const headline = selectedSyndrome === "All syndromes" ? "All syndromes" : selectedSyndrome;
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-slate-50 p-4 md:p-8">
       <div className="mx-auto max-w-7xl space-y-6">
-        <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-          <Card className="rounded-2xl shadow-sm border-slate-200 bg-white">
-            <CardHeader>
-              <div className="flex items-start gap-3">
-                <div className="rounded-2xl bg-slate-900 p-3 text-white">
+        <section className="overflow-hidden rounded-[28px] border border-sky-100 bg-white shadow-sm">
+        <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="p-6 md:p-8">
+            <div className="mb-4 flex items-center gap-3">
+                <div className="rounded-2xl bg-sky-700 p-3 text-white shadow-sm">
                   <Stethoscope className="h-6 w-6" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl">Pediatric Cancer Surveillance Lookup</CardTitle>
-                  <CardDescription className="mt-1 text-base">
-                    Search a syndrome, enter age and sex, and review surveillance rules that apply now.
-                  </CardDescription>
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">SKAN-style prototype</div>
+                  <h1 className="text-2xl font-semibold text-slate-900 md:text-3xl">Pediatric Cancer Surveillance Lookup</h1>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              <p className="max-w-2xl text-sm leading-6 text-slate-600 md:text-base">
+                A clinician-friendly lookup tool for syndrome-based pediatric cancer risks and surveillance recommendations. Search by syndrome or gene, then review what is recommended now, what changes later, and symptom-triggered considerations.
+              </p>
+            <div className="mt-6 space-y-4">
               <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                 <div className="xl:col-span-2">
-                  <label className="mb-2 block text-sm font-medium text-slate-700">Smart syndrome search</label>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">Syndrome or gene</label>
                   <div className="relative">
                     <Search className="absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
                     <Input
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
-                      placeholder="Type p53, tp53, Li-Fraumeni, VHL, DICER1..."
+                      placeholder="Try p53, VHL, DICER1, Beckwith..."
                       className="pl-9 rounded-xl"
                     />
                   </div>
@@ -228,7 +243,7 @@ export default function PediatricSurveillanceLookupApp() {
                   )}
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">Exact syndrome picker</label>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">Condition</label>
                   <Select value={selectedSyndrome} onValueChange={setSelectedSyndrome}>
                     <SelectTrigger className="rounded-xl">
                       <SelectValue />
@@ -244,7 +259,7 @@ export default function PediatricSurveillanceLookupApp() {
                 <div className="grid gap-3 grid-cols-2">
                   <div>
                     <label className="mb-2 block text-sm font-medium text-slate-700">Age</label>
-                    <Input value={age} onChange={(e) => setAge(e.target.value)} type="number" min="0" step="0.1" placeholder="Leave blank for all-age view" className="rounded-xl" />
+                    <Input value={age} onChange={(e) => setAge(e.target.value)} type="number" min="0" step="0.1" placeholder="All ages" className="rounded-xl" />
                   </div>
                   <div>
                     <label className="mb-2 block text-sm font-medium text-slate-700">Sex</label>
@@ -265,55 +280,37 @@ export default function PediatricSurveillanceLookupApp() {
               <div className="flex flex-wrap items-center gap-3">
                 <Button
                   variant={showOnlyActive ? "default" : "outline"}
-                  className="rounded-xl"
+                  className="rounded-xl bg-sky-700 hover:bg-sky-800"
                   onClick={() => setShowOnlyActive((v) => !v)}
                 >
                   <Filter className="mr-2 h-4 w-4" />
-                  {hasAge ? (showOnlyActive ? "Showing active now" : "Show all relevant rules") : "Age blank: showing all-age view"}
+                  {hasAge ? (showOnlyActive ? "Recommended now" : "Show all relevant rules") : "Age blank: showing all-age view"}
                 </Button>
-                <Badge variant="outline" className="rounded-full px-3 py-1 text-sm">{headline}</Badge>
+                {smartSyndrome && (
+                  <div className="flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-sm text-emerald-700">
+                    <ArrowRight className="h-4 w-4" />
+                    Matched syndrome: <span className="font-semibold">{smartSyndrome}</span>
+                  </div>
+                )}
+                <Badge variant="outline" className="rounded-full border-sky-200 bg-sky-50 px-3 py-1 text-sm text-sky-800">{headline}</Badge>
                 <Badge variant="outline" className="rounded-full px-3 py-1 text-sm">{hasAge ? `Age ${numericAge}` : "All-age view"}</Badge>
                 <Badge variant="outline" className="rounded-full px-3 py-1 text-sm">{sex}</Badge>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-2xl shadow-sm border-slate-200 bg-white">
-            <CardHeader>
-              <CardTitle className="text-lg">Important note</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm text-slate-700">
-              <div className="flex gap-2">
-                <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-                <p>This is a prototype clinical reference tool built from structured surveillance rows. It is not a substitute for clinical judgment or direct review of the source paper.</p>
-              </div>
-              <div className="flex gap-2">
-                <FileText className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" />
-                <p>Rows labeled <strong>Direct from guidelines</strong> are more directly tied to extracted guideline tables. Rows labeled <strong>Check guideline recommendation</strong> should be checked against the source paper before relying on exact details.</p>
-              </div>
-              <div className="flex gap-2">
-                <CalendarClock className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" />
-                <p>If an age is entered, the app highlights rules active at that age and sex. If age is left blank, the app shows the all-age view for the selected condition.</p>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
-
-        <div className="grid gap-4 md:grid-cols-3">
-          <SummaryCard title={hasAge ? "Active now" : "All-age view"} value={activeNow.length} subtitle={hasAge ? "Rules currently in range" : "All non-symptom routine rules"} />
-          <SummaryCard title="Later / transition" value={later.length} subtitle={hasAge ? "Rules outside current age band" : "Enter age to see future transitions"} />
-          <SummaryCard title="Symptom-triggered" value={symptomTriggered.length} subtitle="Non-routine alerts" />
-        </div>
+        </section>
 
         <Tabs defaultValue="active" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-3 rounded-2xl bg-white border border-slate-200 overflow-hidden">
-            <TabsTrigger value="active" className="rounded-none">Active now</TabsTrigger>
-            <TabsTrigger value="later" className="rounded-none">Later / transition</TabsTrigger>
-            <TabsTrigger value="all" className="rounded-none">All matching rules</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 rounded-2xl bg-white border border-slate-200 p-1">
+            <TabsTrigger value="active" className="rounded-xl data-[state=active]:bg-sky-700 data-[state=active]:text-white">Recommended now</TabsTrigger>
+            <TabsTrigger value="later" className="rounded-xl data-[state=active]:bg-sky-700 data-[state=active]:text-white">Later / transition</TabsTrigger>
+            <TabsTrigger value="all" className="rounded-xl data-[state=active]:bg-sky-700 data-[state=active]:text-white">All matching rules</TabsTrigger>
+            <TabsTrigger value="about" className="rounded-xl data-[state=active]:bg-sky-700 data-[state=active]:text-white">About</TabsTrigger>
           </TabsList>
 
           <TabsContent value="active">
-            <RuleList title={hasAge ? "What applies now" : "All-age view"} rules={activeNow} age={numericAge} />
+            <RuleList title={hasAge ? "Recommended now" : "All-age view"} rules={activeNow} age={numericAge} />
           </TabsContent>
 
           <TabsContent value="later">
@@ -323,35 +320,46 @@ export default function PediatricSurveillanceLookupApp() {
           <TabsContent value="all">
             <RuleList title="All matching rules" rules={filtered} age={numericAge} />
           </TabsContent>
+
+          <TabsContent value="about">
+            <Card className="rounded-2xl shadow-sm border-slate-200">
+              <CardHeader>
+                <CardTitle>About this prototype</CardTitle>
+                <CardDescription>Background and usage notes.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 text-sm leading-6 text-slate-700">
+                <div className="flex gap-3 rounded-2xl bg-slate-50 p-4">
+                  <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                  <p>This is a prototype clinical reference tool built from structured surveillance rows. It supports review of guideline-based recommendations but does not replace direct review of the source paper or clinical judgment.</p>
+                </div>
+                <div className="flex gap-3 rounded-2xl bg-slate-50 p-4">
+                  <FileText className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" />
+                  <p>Rows labeled <strong>Direct from guidelines</strong> are more directly tied to extracted guideline tables. Rows labeled <strong>Check guideline recommendation</strong> should be checked against the source paper before relying on exact details.</p>
+                </div>
+                <div className="flex gap-3 rounded-2xl bg-slate-50 p-4">
+                  <CalendarClock className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" />
+                  <p>If an age is entered, the app highlights rules active at that age and sex. If age is left blank, the app shows the all-age view for the selected condition.</p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
   );
 }
 
-function SummaryCard({ title, value, subtitle }) {
-  return (
-    <Card className="rounded-2xl shadow-sm border-slate-200 bg-white">
-      <CardContent className="p-5">
-        <div className="text-sm text-slate-500">{title}</div>
-        <div className="mt-2 text-3xl font-semibold text-slate-900">{value}</div>
-        <div className="mt-1 text-sm text-slate-600">{subtitle}</div>
-      </CardContent>
-    </Card>
-  );
-}
-
 function RuleList({ title, rules, age }) {
   if (!rules.length) {
     return (
-      <Card className="rounded-2xl shadow-sm border-slate-200 bg-white">
+      <Card className="rounded-2xl shadow-sm border-slate-200">
         <CardContent className="p-8 text-center text-slate-600">No matching rules found for this selection.</CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="rounded-2xl shadow-sm border-slate-200 bg-white">
+    <Card className="rounded-2xl shadow-sm border-slate-200">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{rules.length} matching rules at the current filters.</CardDescription>
@@ -361,9 +369,9 @@ function RuleList({ title, rules, age }) {
           <div className="space-y-4">
             {rules.map((rule) => {
               const active = isActiveForAge(rule, age);
-              const sourceSearchUrl = rule.sourceFile === "Pasted text.txt"
-                ? null
-                : `https://aacrjournals.org/search-results?f_SiteID=5135&page=1&q=${encodeURIComponent(rule.sourceTitle)}`;
+              const isInternalSource = (rule.sourceFile || "").toLowerCase().includes("pasted") || (rule.sourceTitle || "").toLowerCase().includes("claude");
+              const sourceUrl = SOURCE_URLS[rule.sourceTitle] || null;
+              
               return (
                 <div key={rule.id} className={cn("rounded-2xl border p-4", active ? "border-emerald-200 bg-emerald-50/60" : "border-slate-200 bg-white") }>
                   <div className="flex flex-wrap items-start justify-between gap-3">
@@ -375,13 +383,7 @@ function RuleList({ title, rules, age }) {
                       {active && <Badge className="rounded-full bg-emerald-600">Active now</Badge>}
                       {!age && !rule.symptom && <Badge variant="outline" className="rounded-full">All-age view</Badge>}
                       {rule.symptom && <Badge variant="outline" className="rounded-full">Symptom-triggered</Badge>}
-                      {sourceSearchUrl ? (
-                        <a href={sourceSearchUrl} target="_blank" rel="noreferrer">
-                          <Badge variant="outline" className={cn("rounded-full border cursor-pointer hover:bg-slate-50", sourceBadge(rule.confidence))}>{sourceLabel(rule.confidence)}</Badge>
-                        </a>
-                      ) : (
-                        <Badge variant="outline" className={cn("rounded-full border", sourceBadge(rule.confidence))}>{sourceLabel(rule.confidence)}</Badge>
-                      )}
+                      <Badge variant="outline" className={cn("rounded-full border", sourceBadge(rule.confidence))}>{sourceLabel(rule.confidence)}</Badge>
                       <Badge variant="outline" className="rounded-full">{rule.category}</Badge>
                     </div>
                   </div>
@@ -403,9 +405,18 @@ function RuleList({ title, rules, age }) {
                     </div>
                   )}
 
-                  <div className="mt-4 text-xs text-slate-500">
-                    Source: {rule.sourceTitle} ({rule.sourceFile})
-                  </div>
+                  {!isInternalSource && rule.sourceTitle && (
+                    <div className="mt-4 text-xs text-slate-500">
+                      Source:{" "}
+                      {sourceUrl ? (
+                        <a href={sourceUrl} target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-slate-700">
+                          {rule.sourceTitle}
+                        </a>
+                      ) : (
+                        rule.sourceTitle
+                      )}
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -424,3 +435,4 @@ function Info({ label, value }) {
     </div>
   );
 }
+
